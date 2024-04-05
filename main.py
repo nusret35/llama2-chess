@@ -1,11 +1,13 @@
 import chess
 from schemas import Game, Player
-from enum import Enum
+from llm_player import LLMPlayer
+from dotenv import load_dotenv
 
 
 if __name__ == "__main__":
+    load_dotenv()
 
-    player_white, player_black  = Player(chess.WHITE), Player(chess.BLACK)
+    player_white, player_black  = Player(chess.WHITE), LLMPlayer(chess.BLACK)
     game = Game(player_white,
                 player_black)
     

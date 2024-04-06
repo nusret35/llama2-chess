@@ -47,12 +47,17 @@ class Game:
     def make_move(self, player:Player, move:str):
         """Player makes move
         """
-        if self.turn == player.color:
+        if self.board.turn == player.color:
             # Make the move
-            self.board.push_san(move)
-            self.turn = not self.turn
-            self.move_counter += 1 
-            print(f"\n{self.board}\n")
+            try:
+                self.board.push_san(move)
+                print(f"\n{self.board}\n")
+                self.move_counter += 1 
+            except chess.IllegalMoveError:
+                message = f"Tried illegal move: {move}. Try again."
+                print(message)
+                new_move = player.get_move(self.board.legal_moves,self.game_history)
+                self.make_move(player,new_move)
     
     def start_game(self):
         while not self.board.is_game_over():

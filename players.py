@@ -2,7 +2,8 @@ import chess
 from enum import Enum
 import re
 import json
-from prompt_templates import MAKE_MOVE_PROMPT, NAIVE_FIX_PROMPT, ILLEGAL_MOVE_PROMPT
+from prompts import MAKE_MOVE_PROMPT, NAIVE_FIX_PROMPT, ILLEGAL_MOVE_PROMPT
+from prompt_templates import PROMPT_TEMPLATE
 from langchain_community.llms import Replicate
 from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
@@ -13,6 +14,8 @@ class Model(Enum):
     LLAMA_70B = "meta/llama-2-70b-chat:2d19859030ff705a87c746f7e96eea03aefb71f166725aee39692f1476566d48"
     LLAMA_13B = "meta/llama-2-13b-chat:56acad22679f6b95d6e45c78309a2b50a670d5ed29a37dd73d182e89772c02f1"
     LLAMA_7B = "meta/llama-2-7b-chat:f1d50bb24186c52daae319ca8366e53debdaa9e0ae7ff976e918df752732ccc4"
+    MISTRAL_7B_INSTRUCT_V02 = "mistralai/mistral-7b-instruct-v0.2:f5701ad84de5715051cb99d550539719f8a7fbcf65e0e62a3d1eb3f94720764e"
+    
 
 class FalseFormatError(Exception):
     pass
@@ -109,9 +112,10 @@ class LLMPlayer(Player):
         llm = Replicate(
             model=self.model.value,
             model_kwargs={"temperature": 0.75, 
-                          "top_p":0.8, 
-                          "system_prompt":prompt
-                          }
+                          "top_p":0.8,
+                          "system_prompt":prompt,
+                          "prompt_template": PROMPT_TEMPLATE,
+                        }
         )
         try:
             response = llm("")
@@ -134,13 +138,3 @@ class LLMPlayer(Player):
         message = f"{self.get_color().capitalize()} plays: {move}"
         print(message)
         return move
-    
-
-if __name__ == "__main__":
-    player = LLMPlayer(color=chess.WHITE, model=Model.LLAMA_7B)
-    legal_moves = ""
-    for move in chess.Board().legal_moves:
-        legal_moves += f"{move}, "
-
-    prompt = player._make_move_prompt(legal_moves=legal_moves,history="")
-    print(prompt)

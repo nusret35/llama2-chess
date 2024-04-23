@@ -76,9 +76,13 @@ class Game:
             
     def start_game(self):
         while not self.board.is_game_over():
+            print("White's turn")
+            print(f"Legal moves: {self.get_legal_moves()}")
             self.make_move(player=self.player_white)
             if self.board.is_game_over():
                 break
+            print("Black's turn")
+            print(f"Legal moves: {self.get_legal_moves()}")
             self.make_move(player=self.player_black)
 
         print("Game finished.")

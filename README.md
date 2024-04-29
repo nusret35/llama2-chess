@@ -2,7 +2,7 @@
 
 A Python chess application that utilizes Llama 2 models as LLM players. The goal of this application is to demonstrate the chess skills of Llama 2 models. This repository is a great example for RAG (Retrieval Augmented Generation) implementations and prompt engineering. 
 
-To play the game, run `start_game.py` inside `llama-chess` directory:
+To play the game, run `start_game.py` inside the directory:
 ```bash
 python start_game.py
 ```
